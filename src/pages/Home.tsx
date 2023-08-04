@@ -19,6 +19,7 @@ export function Home() {
     {
       header: 'ID',
       accessorKey: 'id',
+      enableColumnFilter: false
     },
     {
       header: 'Name',
@@ -39,7 +40,9 @@ export function Home() {
     {
       header: '',
       accessorKey: 'action',
-      cell: info => <Button size='sm' colorScheme='blue'>Baixar</Button>
+      cell: info => <Button size='sm' colorScheme='blue'>Baixar</Button>,
+      enableGlobalFilter: false,
+      enableColumnFilter: false
     }
   ]
   

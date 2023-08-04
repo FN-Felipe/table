@@ -8,7 +8,8 @@ import {
   getFilteredRowModel,
   VisibilityState,
   ExpandedState,
-  getExpandedRowModel
+  getExpandedRowModel,
+  ColumnFiltersState
 } from '@tanstack/react-table'
 import React, { useState } from 'react'
 import { Button, Flex, Icon, Table, Tbody, Td, Text, Th, Thead, Tr, useBreakpointValue } from '@chakra-ui/react'
@@ -21,7 +22,7 @@ import { MdFileDownload } from 'react-icons/md';
 import { format } from 'date-fns';
 import { PageSizeSelect } from './PageSizeSelect';
 import { Summary } from './Summary';
-
+import { ColumnFilter } from './ColumnFilter';
 
 export function ReactTable({
   data,
@@ -52,11 +53,13 @@ export function ReactTable({
   const [expanded, setExpanded] = useState<ExpandedState>({})
   const [filtering, setFiltering] = useState('')
   const showTitle = useBreakpointValue({ base: false, md: !!title })
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
   const table = useReactTable({
     data,
     columns,
     state: {
+      columnFilters,
       sorting: sorting,
       expanded,
       globalFilter: filtering,
@@ -73,6 +76,7 @@ export function ReactTable({
     enableExpanding: true,
     autoResetExpanded: false,
     enableMultiSort,
+    onColumnFiltersChange: setColumnFilters,
   })
 
   return (
@@ -116,15 +120,22 @@ export function ReactTable({
             borderRadius: '10px',
           },
         }}>
-          <Table variant='unstyled' size='sm'>
-            <Thead h='10'>
+          <Table variant='striped' size='sm' colorScheme='blackAlpha'>
+            <Thead>
               {table.getHeaderGroups().map(headerGorup => (
                 <Tr key={headerGorup.id}>
                   {headerGorup.headers.map(header => (
-                    <Th key={header.id} align='left' onClick={header.column.getToggleSortingHandler()} colSpan={header.colSpan}>
-                      <Flex gap={2}>
-                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                        {{ asc: <TriangleUpIcon />, desc: <TriangleDownIcon /> } [header.column.getIsSorted() as string] ?? null}
+                    <Th key={header.id} align='left'  colSpan={header.colSpan} h='16'>
+                      <Flex gap={1} direction='column' h='100%'>
+                        <Flex onClick={header.column.getToggleSortingHandler()} cursor='pointer'>
+                          {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                          {{ asc: <TriangleUpIcon />, desc: <TriangleDownIcon /> }[header.column.getIsSorted() as string] ?? null}
+                        </Flex>
+                        {header.column.getCanFilter() ? (
+                          // <ColumnFilter column={header.column} table={table} />
+                          <ColumnFilter column={header.column} />
+                        ) :
+                          null}
                       </Flex>
                     </Th>
                   ))}
@@ -161,7 +172,7 @@ export function ReactTable({
               ))}
             </Tbody>
           </Table>
-        </Flex>
+      </Flex>
       <Flex w='100%' justify='space-between' align='center' mt={5}>
         <Summary table={table} />
         <Flex gap={5}>
