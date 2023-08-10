@@ -2,7 +2,7 @@ import { Flex, Button, FlexProps } from "@chakra-ui/react"
 import { MdFirstPage, MdNavigateBefore, MdNavigateNext, MdLastPage } from "react-icons/md"
 import { useTable } from '..'
 
-export function TablePagination({ ...props }: FlexProps) {
+export function Pagination({ ...props }: FlexProps) {
   const table = useTable()
   return (
     <Flex gap={2} justify="flex-end" {...props}>
