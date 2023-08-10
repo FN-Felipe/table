@@ -1,6 +1,33 @@
 import { extendTheme } from '@chakra-ui/react'
+import { tableAnatomy } from '@chakra-ui/anatomy'
+import { createMultiStyleConfigHelpers } from '@chakra-ui/react'
+
+const { definePartsStyle, defineMultiStyleConfig } = createMultiStyleConfigHelpers(tableAnatomy.keys)
+
+const baseStyle = definePartsStyle({
+  table: {
+    th: {
+      borderBottom: 0
+    },
+    td: {
+      borderBottom: 0
+    },
+    tr: {
+      "&:nth-of-type(odd)": {
+        td: {
+          background: 'gray.50',
+        },
+      }
+    }
+  },
+})
+
+const tableTheme = defineMultiStyleConfig({ baseStyle })
 
 export const theme = extendTheme({
+  // components: {
+  //   Table: tableTheme
+  // },
   fonts: {
     heading: 'Roboto',
     body: 'Roboto',

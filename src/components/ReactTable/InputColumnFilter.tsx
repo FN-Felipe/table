@@ -2,13 +2,13 @@ import { Box, IconButton, Input, InputGroup, InputRightElement } from '@chakra-u
 import { useState, useEffect, InputHTMLAttributes } from 'react'
 import { MdOutlineClose } from 'react-icons/md';
 
-export function InputColumnFilter({
-  value: initialValue, onChange, debounce = 500
-}: {
-    value: string | number
-    onChange: (value: string | number) => void
-    debounce?: number
-} & Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+type InputColumnFilterProps = {
+  value: string | number
+  onChange: (value: string | number) => void
+  debounce?: number
+}
+
+export function InputColumnFilter({ value: initialValue, onChange, debounce = 500 }: InputColumnFilterProps & Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   const [value, setValue] = useState(initialValue)
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function InputColumnFilter({
   return (
     <Box w='fit-content'>
       <InputGroup>
-        <Input maxW={40} size='sm' value={value || ''} onChange={(event) => setValue(event.target.value)} placeholder='Pesquisar...' borderRadius='md' boxShadow='base' />
+        <Input maxW={40} variant="flushed" size='sm' value={value || ''} onChange={(event) => setValue(event.target.value)} placeholder='Pesquisar...' _placeholder={{ opacity: 0.5}} />
         {value && (
           <InputRightElement pb={2}>
             <IconButton variant="ghost" aria-label="search-clean" size="xs" onClick={() => setValue('')} icon={<MdOutlineClose />}/>

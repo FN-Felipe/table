@@ -15,4 +15,4 @@ export function SearchInput({ value, setValue, ...rest }: { value: string; setVa
       </InputGroup>
     </Box>
   )
-}
+} 

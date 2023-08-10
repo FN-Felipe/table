@@ -49,10 +49,10 @@ export function ReactTable({
     enableMultiSort?: boolean | undefined
     actionButton?: JSX.Element
 }) {
+  const showTitle = useBreakpointValue({ base: false, md: !!title })
   const [sorting, setSorting] = useState<SortingState>([])
   const [expanded, setExpanded] = useState<ExpandedState>({})
   const [filtering, setFiltering] = useState('')
-  const showTitle = useBreakpointValue({ base: false, md: !!title })
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
   const table = useReactTable({
@@ -120,22 +120,18 @@ export function ReactTable({
             borderRadius: '10px',
           },
         }}>
-          <Table variant='striped' size='sm' colorScheme='blackAlpha'>
+          <Table variant='striped' size='md' colorScheme='blackAlpha'>
             <Thead>
               {table.getHeaderGroups().map(headerGorup => (
                 <Tr key={headerGorup.id}>
                   {headerGorup.headers.map(header => (
-                    <Th key={header.id} align='left'  colSpan={header.colSpan} h='16'>
+                    <Th key={header.id} align='left' border="none" colSpan={header.colSpan} h='16'>
                       <Flex gap={1} direction='column' h='100%'>
-                        <Flex onClick={header.column.getToggleSortingHandler()} cursor='pointer'>
+                        <Flex color="gray.500" gap={2} onClick={header.column.getToggleSortingHandler()} cursor='pointer'>
                           {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                           {{ asc: <TriangleUpIcon />, desc: <TriangleDownIcon /> }[header.column.getIsSorted() as string] ?? null}
                         </Flex>
-                        {header.column.getCanFilter() ? (
-                          // <ColumnFilter column={header.column} table={table} />
-                          <ColumnFilter column={header.column} />
-                        ) :
-                          null}
+                        {header.column.getCanFilter() ? <ColumnFilter column={header.column} table={table} /> : null}
                       </Flex>
                     </Th>
                   ))}
